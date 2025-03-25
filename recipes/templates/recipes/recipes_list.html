@@ -1,0 +1,24 @@
+
+{% extends 'layout.html'%}
+
+{% block title %}
+    Recipes
+{% endblock %}
+
+
+{% block content %}
+    <section>
+        <h1>Recipes</h1>
+        {% for recipe in recipes %}
+            <article class="recipe">
+                <h2>
+                    <a href="{% url 'recipes:page' slug=recipe.slug %}">
+                        {{ recipe.title }}
+                    </a> 
+                </h2>
+                <p>{{ recipe.created_at }} by {{ recipe.created_by }} </p>
+                <p>{{recipe.description}} </p>
+            </article>
+        {% endfor %}
+    </section> 
+{% endblock %}

@@ -1,0 +1,43 @@
+
+{% extends 'layout.html'%}
+
+{% block title %}
+    {{ recipe.title }}
+{% endblock %}
+
+
+{% block content %}
+    <section>
+        <img 
+        class="banner"
+        src="{{ recipe.banner.url }}"
+        alt = "{{ recipe.title }}"
+        />
+        
+        <h1>Name: {{ recipe.title }} </h1>
+        
+        <p>Description: </p>
+
+        <p> {{recipe.description}} </p>
+        
+        <p>Ingredients: </p>
+        <ul class="ingredient-paragraph">
+            <!--{% for ri in recipe.recipeingredient_set.all %}
+                <li>{{ ri.quantity }} {{ ri.unit }} of {{ ri.get_ingredient_name }}</li>
+            {% endfor %}--> 
+            {% for ri in recipe.recipeingredient_set.all %}
+                {{ ri.quantity }} 
+                {{ ri.ingredient.name|default:ri.custom_ingredient }}
+                {% if not forloop.last %}<span class="ingredient-separator">•</span>{% endif %}
+            {% endfor %}
+        </ul>
+
+        <p>Instructions: {{ recipe.instructions|linebreaks }} </p>
+        
+        <p>Tags:   {% for tag in recipe.tags.all %}
+            {{ tag.name }}{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+         </p> 
+         <p>Created by: {{ recipe.created_by }} </p> 
+    </section> 
+{% endblock %}

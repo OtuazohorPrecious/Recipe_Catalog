@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}  <!-- Assuming you have a base template -->
+
+{% block content %}
+<h1>Search Recipes</h1>
+
+<!-- Search Form -->
+<form method="get" action="{% url 'recipes:recipe_search' %}" class='form-with-validation'>
+  <!-- Name/Keyword Search -->
+  <div>
+    <label for="q">Search by name or ingredient:</label>
+    <input type="text" name="q" id="q" value="{{ query }}">
+  </div>
+
+  <!-- Meal Type Dropdown -->
+  <div class="form-submit">
+    <label for="meal_type">Meal Type:</label>
+    <select name="meal_type" id="meal_type">
+      <option value="">All</option>
+      <option value="breakfast" {% if selected_meal_type == "breakfast" %}selected{% endif %}>Breakfast</option>
+      <option value="lunch" {% if selected_meal_type == "lunch" %}selected{% endif %}>Lunch</option>
+      <option value="dinner" {% if selected_meal_type == "dinner" %}selected{% endif %}>Dinner</option>
+      <option value="desert" {% if selected_meal_type == "desert" %}selected{% endif %}>Desert</option>
+      <option value="snack" {% if selected_meal_type == "snack" %}selected{% endif %}>Snack</option>
+    </select>
+  </div>
+
+  <!-- Tag Checkboxes -->
+  <div class>
+    <label>Tags:</label>
+    {% for tag in all_tags %}
+      <div>
+        <input 
+          type="checkbox" 
+          name="tags" 
+          id="tag-{{ tag.id }}" 
+          value="{{ tag.id }}"
+          {% if tag.id in selected_tags %}checked{% endif %}
+        >
+        <label for="tag-{{ tag.id }}">{{ tag.name }}</label>
+      </div>
+    {% endfor %}
+  </div>
+
+  <button type="submit" class="form-submit">Search</button>
+</form>
+
+<!-- Results -->
+<h3>Results ({{ recipes.count }})</h3>
+<ul>
+  {% for recipe in recipes %}
+    <li>
+      <h3><a href="{% url 'recipes:page' slug=recipe.slug %}">{{ recipe.title }}</a></h3>
+      <p>Meal Type: {{ recipe.meal_type }}</p>
+      <p>Tags: {% for tag in recipe.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    </li>
+  {% empty %}
+    <p>No recipes found.</p>
+  {% endfor %}
+</ul>
+{% endblock %}
