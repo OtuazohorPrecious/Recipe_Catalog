@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+
+{% block title %}Meal Plan: {{ meal_plan.start_date }} to {{ meal_plan.end_date }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Meal Plan Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-dark mb-3" style="font-family: 'Playfair Display', serif;">
+            Your Meal Plan
+        </h1>
+        <p class="lead text-muted">
+            {{ meal_plan.start_date|date:"F j" }} to {{ meal_plan.end_date|date:"F j, Y" }}
+        </p>
+        <a href="{% url 'meal_plans:edit_meal_plan' meal_plan.id %}" 
+           class="btn btn-outline-primary mt-3">
+           <i class="bi bi-pencil-square"></i> Edit Plan
+        </a>
+    </div>
+
+    <!-- Meal Plan Days -->
+    <div class="row g-4">
+        {% for day in meal_plan.days.all %}
+        <div class="col-lg-4 col-md-6">
+            <div class="day-card card h-100 border-0 shadow-sm">
+                <div class="card-header bg-white border-0 pb-0">
+                    <h3 class="h4 text-center py-3 mb-0" style="font-family: 'Playfair Display', serif;">
+                        {{ day.date|date:"l, F j" }}
+                    </h3>
+                </div>
+                <div class="card-body pt-0">
+                    {% for meal in day.meals.all %}
+                    <div class="meal-item py-3 border-bottom">
+                        <div class="d-flex align-items-start">
+                            <span class="badge bg-light text-dark me-3 mt-1" style="min-width: 80px;">
+                                {{ meal.get_meal_type_display }}
+                            </span>
+                            <div>
+                                {% if meal.recipe %}
+                                <h4 class="h6 mb-1">{{ meal.recipe.title }}</h4>
+                                <a href="{% url 'recipes:page' slug=meal.recipe.slug %}" 
+                                   class="btn btn-sm btn-outline-primary">
+                                   View Recipe
+                                </a>
+                                {% else %}
+                                <p class="text-muted mb-0">No recipe selected</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-4">
+                        <p class="text-muted">No meals planned for this day</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

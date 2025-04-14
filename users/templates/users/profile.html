@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="profile-container">
+        <div class="profile-picture">
+            {% if user.profile_picture %}
+                <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="img-thumbnail">
+            {% endif %}
+        </div>
+        <div class="profile-info">
+            <h2>{{ user.get_full_name }}</h2>
+            <p>Username: {{ user.username }}</p>
+            <p>Email: {{ user.email }}</p>
+            <p>Account Type: {{ user.get_user_type_display }}</p>
+            <a href="{% url 'users:profile_edit' %}" class="btn btn-secondary">Edit Profile</a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,43 +1,170 @@
-
 {% extends 'layout.html'%}
+{% load static %}
 
-{% block title %}
-    {{ recipe.title }}
-{% endblock %}
-
+{% block title %}{{ recipe.title }}{% endblock %}
 
 {% block content %}
-    <section>
-        <img 
-        class="banner"
-        src="{{ recipe.banner.url }}"
-        alt = "{{ recipe.title }}"
-        />
+    <section class="recipe-header text-center mb-5">
+        <!-- Centered Banner Image -->
+        <div class="container px-4">
+            <img class="banner img-fluid rounded-lg shadow-lg mb-4" 
+                 src="{{ recipe.banner.url }}" 
+                 alt="{{ recipe.title }}"
+                 style="max-height: 500px; width: auto; margin: 0 auto;">
+        </div>
         
-        <h1>Name: {{ recipe.title }} </h1>
-        
-        <p>Description: </p>
+        <!-- Recipe Title with Beautiful Typography -->
+        <div class="text-center mb-4">
+            <h1 class="display-4 fw-bold text-dark mb-3" style="font-family: 'Playfair Display', serif;">
+                {{ recipe.title }}
+            </h1>
+            <p class="text-muted mb-0">
+                Created by <span class="text-primary">{{ recipe.created_by }}</span> • 
+                {{ recipe.created_at|date:"F j, Y" }}
+            </p>
+        </div>
+    </section>
 
-        <p> {{recipe.description}} </p>
-        
-        <p>Ingredients: </p>
-        <ul class="ingredient-paragraph">
-            <!--{% for ri in recipe.recipeingredient_set.all %}
-                <li>{{ ri.quantity }} {{ ri.unit }} of {{ ri.get_ingredient_name }}</li>
-            {% endfor %}--> 
-            {% for ri in recipe.recipeingredient_set.all %}
-                {{ ri.quantity }} 
-                {{ ri.ingredient.name|default:ri.custom_ingredient }}
-                {% if not forloop.last %}<span class="ingredient-separator">•</span>{% endif %}
-            {% endfor %}
-        </ul>
+    <!-- Recipe Content -->
+    <div class="container px-4">
+        <!-- Description with elegant typography -->
+        <section class="mb-5">
+            <h2 class="h3 mb-3 text-center" style="font-family: 'Playfair Display', serif;">About This Recipe</h2>
+            <p class="lead text-center text-muted mb-4" style="max-width: 800px; margin: 0 auto;">
+                {{ recipe.description }}
+            </p>
+            <div class="text-center">
+                
+                <span class="badge bg-light text-dark border me-2">meal type: {{ recipe.meal_type }}</span>
+                {% for tag in recipe.tags.all %}
+                <span class="badge bg-light text-dark border me-2">tags: {{ tag.name }}</span>
+                {% endfor %}
+            </div>
+        </section>
 
-        <p>Instructions: {{ recipe.instructions|linebreaks }} </p>
-        
-        <p>Tags:   {% for tag in recipe.tags.all %}
-            {{ tag.name }}{% if not forloop.last %}, {% endif %}
-          {% endfor %}
-         </p> 
-         <p>Created by: {{ recipe.created_by }} </p> 
-    </section> 
+        <div class="row">
+            <!-- Ingredients Column -->
+            <div class="col-lg-5 mb-5">
+                <h2 class="h3 mb-4 pb-2 border-bottom" style="font-family: 'Playfair Display', serif;">
+                    Ingredients
+                </h2>
+                <ul class="list-unstyled">
+                    {% for ri in recipe.recipeingredient_set.all %}
+                    <li class="py-2 d-flex align-items-center">
+                        <span class="me-2">•</span>
+                        <span>
+                            <span class="fw-bold">{{ ri.quantity }}</span>
+                            {{ ri.ingredient.name|default:ri.custom_ingredient }}
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Instructions Column -->
+            <div class="col-lg-7 mb-5">
+                <h2 class="h3 mb-4 pb-2 border-bottom" style="font-family: 'Playfair Display', serif;">
+                    Instructions
+                </h2>
+                <div class="instructions" style="white-space: pre-line; line-height: 1.8;">
+                    {{ recipe.instructions }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ratings Section -->
+    <section class="py-5 bg-light">
+        <div class="container px-4">
+            <h3 class="h2 text-center mb-5" style="font-family: 'Playfair Display', serif;">Ratings & Reviews</h3>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="bg-white p-4 rounded shadow-sm">
+                        <div class="row">
+                            <div class="col-md-6 mb-4 mb-md-0">
+                                {% if user.is_authenticated %}
+                                <form method="post" action="{% url 'recipes:rate-recipe' recipe.slug %}">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Rate this recipe</label>
+                                        {% include 'recipes/includes/star_rating.html' with form=rating_form %}
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit Rating</button>
+                                </form>
+                                {% else %}
+                                <div class="text-center py-3">
+                                    <a href="{% url 'users:login' %}?next={% url 'recipes:page' recipe.slug %}" 
+                                       class="btn btn-outline-primary">Login to rate this recipe</a>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-center">
+                                    <div class="display-4 text-warning mb-2">
+                                        {{ recipe.average_rating|floatformat:1 }}
+                                    </div>
+                                    <div class="stars mb-3">
+                                        {% for i in "12345" %}
+                                        <i class="bi bi-star-fill {% if recipe.average_rating >= i|add:0 %}text-warning{% else %}text-muted{% endif %}"></i>
+                                        {% endfor %}
+                                    </div>
+                                    <p class="text-muted">Based on {{ recipe.ratings.count }} ratings</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comments Section -->
+    <section class="py-5">
+        <div class="container px-4">
+            <h3 class="h2 text-center mb-5" style="font-family: 'Playfair Display', serif;">Comments</h3>
+            
+            {% if user.is_authenticated %}
+            <div class="row justify-content-center mb-5">
+                <div class="col-md-8">
+                    <form method="post" action="{% url 'recipes:add-comment' recipe.slug %}">
+                        {% csrf_token %}
+                        <div class="form-floating mb-3">
+                            {{ comment_form.text }}
+                            <label for="{{ comment_form.text.id_for_label }}">Share your thoughts...</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Post Comment</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <div class="text-center mb-5">
+                <a href="{% url 'users:login' %}?next={% url 'recipes:page' recipe.slug %}" 
+                   class="btn btn-outline-primary">Login to post comments</a>
+            </div>
+            {% endif %}
+
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    {% for comment in recipe.comments.all %}
+                    <div class="mb-4 pb-4 border-bottom">
+                        <div class="d-flex justify-content-between mb-2">
+                            <strong class="text-dark">{{ comment.user.username }}</strong>
+                            <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
+                        </div>
+                        <p class="mb-2">{{ comment.text }}</p>
+                        {% if comment.user == user %}
+                        <a href="{% url 'recipes:delete-comment' comment.id %}" 
+                           class="text-danger small">Delete</a>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-4">
+                        <p class="text-muted">No comments yet. Be the first to share your thoughts!</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
 {% endblock %}

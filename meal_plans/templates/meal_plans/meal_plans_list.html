@@ -1,0 +1,73 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Meal Plans{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">My Meal Plans</h1>
+        <a href="{% url 'meal_plans:create_meal_plan' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> New Plan
+        </a>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for meal_plan in meal_plans %}
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="card-title mb-1">
+                                {{ meal_plan.start_date|date:"M d" }} - {{ meal_plan.end_date|date:"M d" }}
+                            </h5>
+                            <small class="text-muted">
+                                Created {{ meal_plan.created_at|timesince }} ago
+                            </small>
+                        </div>
+                        {% if user.is_authenticated and meal_plan.user == user %}
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                                    type="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-three-dots"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" 
+                                       href="{% url 'meal_plans:edit_meal_plan' meal_plan.id %}">
+                                        <i class="bi bi-pencil me-2"></i>Edit
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" 
+                                       href="{% url 'meal_plans:delete' meal_plan.id %}">
+                                        <i class="bi bi-trash me-2"></i>Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="{% url 'meal_plans:view_meal_plan' meal_plan.id %}" 
+                       class="btn btn-sm btn-outline-primary">
+                        View Full Plan
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                You don't have any meal plans yet. 
+                <a href="{% url 'meal_plans:create_meal_plan' %}" class="alert-link">
+                    Create your first plan
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
