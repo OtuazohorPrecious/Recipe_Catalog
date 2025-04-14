@@ -7,18 +7,63 @@
 
 
 {% block content %}
-    <section>
-        <h1>Recipes</h1>
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="font-signika">Our Recipes</h1>
+            <p class="lead">Discover delicious recipes shared by our community</p>
+        </div>
+    </div>
+
+    <div class="row">
         {% for recipe in recipes %}
-            <article class="recipe">
-                <h2>
-                    <a href="{% url 'recipes:page' slug=recipe.slug %}">
-                        {{ recipe.title }}
-                    </a> 
-                </h2>
-                <p>{{ recipe.created_at }} by {{ recipe.created_by }} </p>
-                <p>{{recipe.description}} </p>
-            </article>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card recipe-card h-100">
+                {% if recipe.banner %}
+                <img src="{{ recipe.banner.url }}" class="card-img-top recipe-img" alt="{{ recipe.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <div class="meal-type-badge mb-2">
+                        {{ recipe.meal_type|title }}
+                    </div>
+                    <h5 class="card-title recipe-title">
+                        <a href="{% url 'recipes:page' slug=recipe.slug %}" class="text-decoration-none text-dark">
+                            {{ recipe.title }}
+                        </a>
+                    </h5>
+                    <p class="card-text text-muted small">
+                        <i class="bi bi-clock"></i> {{ recipe.created_at|date:"M d, Y" }}
+                        <i class="bi bi-person ms-2"></i> {{ recipe.created_by.username }}
+                    </p>
+                    <p class="card-text">
+                        {{ recipe.description|truncatewords:20 }}
+                    </p>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-light-green text-green">
+                            {{ recipe.meal_type|title }}
+                        </span>
+                        {% if user.is_authenticated and recipe.created_by == user %}
+                        <div class="recipe-actions">
+                            <a href="{% url 'recipes:edit' recipe.slug %}" class="btn btn-sm btn-edit">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <a href="{% url 'recipes:delete' recipe.slug %}" class="btn btn-sm btn-delete">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                No recipes found. Be the first to <a href="{% url 'recipes:new-recipe' %}" class="alert-link">add a recipe</a>!
+            </div>
+        </div>
         {% endfor %}
-    </section> 
+    </div>
+</div>
 {% endblock %}

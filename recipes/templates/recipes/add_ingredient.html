@@ -1,0 +1,36 @@
+{% extends 'layout.html'%}
+
+{% block title %}
+    Add New Ingredient
+{% endblock %}
+
+
+{% block content %}
+    <div class="ingredient-form">
+        <h2>Add New Ingredient</h2>
+        <form class= "form-with-validation" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            
+            <div class="form-group">
+                <label for="name">Ingredient Name:</label>
+                <input type="text" id="name" name="name" required 
+                    placeholder="e.g., Saffron">
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Save Ingredient</button>
+                <a href="{{ request.GET.next }}" >Cancel</a>
+            </div>
+        </form>
+    </div>
+    {% comment %} <section>
+        <h1>New recipe</h1>
+        
+        <form class= "form-with-validation" action="" method="post" enctype= "multipart/form-data">
+            {% csrf_token %}
+            {{ form }}
+            <button class="form-submit">Add Recipe</button>
+        </form>
+    </section> {% endcomment %}
+{% endblock %}
