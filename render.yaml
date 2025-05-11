@@ -16,6 +16,8 @@ services:
           property: connectionString
       - key: WEB_CONCURRENCY
         value: 4
+      - key: DJANGO_SETTINGS_MODULE
+        value: recipe_catalog.settings.production
     plan: free
 
 databases:
