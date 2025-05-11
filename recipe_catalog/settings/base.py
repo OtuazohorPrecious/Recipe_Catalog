@@ -23,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x&=+-ajsj94!r@^(&kr0ne_9cm1g1h^l@hw!(r-k%_1ry8)56*'
+#SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -180,9 +180,15 @@ AUTH_USER_MODEL = 'users.User'
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # For actual email sending (replace with your SMTP details):
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # e.g., for Gmail
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'otuapreshy@gmail.com'
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD') # Not your regular password!
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'  # e.g., for Gmail
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'otuapreshy@gmail.com'
+# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD') # Not your regular password!
+
+
+try:
+    from .local import *
+except ImportError:
+    pass
