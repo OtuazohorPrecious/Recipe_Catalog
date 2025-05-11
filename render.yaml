@@ -11,9 +11,7 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: DATABASE_URL
-        fromDatabase:
-          name: recipe-db
-          property: connectionString
+        value: postgresql://recipe_catalog_user:agpYxSM3DSr7DmSbyyR6xJTEX8q0gNU5@dpg-d0gh4fqdbo4c73bd3mgg-a/recipe_catalog
       - key: WEB_CONCURRENCY
         value: 4
       - key: DJANGO_SETTINGS_MODULE
