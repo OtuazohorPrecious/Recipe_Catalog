@@ -94,16 +94,7 @@ WSGI_APPLICATION = 'recipe_catalog.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'recipe_db'),
-        'USER': os.environ.get('DB_USER', 'recipe_user'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),  # No default here!
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
-    }
-}
+
 
 
 # DATABASES = {
@@ -163,7 +154,9 @@ STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
 
 
-STATIC_ROOT = BASE_DIR / 'assets'
+#STATIC_ROOT = BASE_DIR / 'assets'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 STATICFILES_DIRS = [
@@ -175,6 +168,8 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+
 
 # For testing in development, use the console backend:
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
