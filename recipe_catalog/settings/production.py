@@ -3,7 +3,7 @@ from .base import *
 import dj_database_url
 
 DEBUG = False
-ALLOWED_HOSTS = ['recipe_catalog.onrender.com', 'localhost']
+ALLOWED_HOSTS = ['recipe-catalog.onrender.com', 'localhost']
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
