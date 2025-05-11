@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Recipe, Tag, Ingredient
+from .models import Recipe, Tag
 from django.contrib.auth.decorators import login_required
 from . import forms
 from django.db.models import Q
@@ -39,26 +39,23 @@ def recipe_page(request, slug):
     }
     return render(request, 'recipes/recipe_page.html', context)
 
-@require_http_methods(["GET"])
-def ingredient_search(request):
-    """Basic search endpoint"""
-    search_term = request.GET.get('search', '')
-    ingredients = Ingredient.objects.filter(name__icontains=search_term)[:5]
-    results = [{'name': i.name, 'id': i.id} for i in ingredients]
-    return JsonResponse(results, safe=False)
 
-def add_ingredient(request):
+
+def add_meal_tag(request):
     if request.method == 'POST':
         name = request.POST.get('name', '').strip()  # Use request.POST, not request.FILES
         
         if name:  # Only create if name is not empty
-            # get_or_create returns a tuple: (object, created)
-            ingredient, created = Ingredient.objects.get_or_create(name=name)
+            tag, created = Tag.objects.get_or_create(name__iexact=name, defaults={'name': name})
+
+            if created:
+                messages.success(request, f'Tag "{name}" created successfully!')
+            else:
+                messages.info(request, f'Tag "{name}" already exists.')
+
+            return redirect('recipes:new-recipe')
             
-            # No need for .add() here - get_or_create already saves to database
-            return redirect('recipes:new-recipe')  # Redirect to a list view
-            
-    return render(request, 'recipes/add_ingredient.html')
+    return render(request, 'recipes/add_meal_tag.html')
 
 @user_passes_test(is_chef)
 def recipe_new(request):
@@ -70,8 +67,6 @@ def recipe_new(request):
             newrecipe.created_by=request.user
             newrecipe.save()
 
-            for ingredient in form.cleaned_data['ingredients']:
-                newrecipe.ingredients.add(ingredient)
             for tag in form.cleaned_data['tags']:
                 newrecipe.tags.add(tag)
         
@@ -91,9 +86,11 @@ def recipe_search(request):
     
     if query:
         recipes = recipes.filter(
-            Q(title__icontains=query) |
-            Q(recipeingredient__ingredient__name__icontains=query)
+            Q(title__icontains=query) | Q(ingredients_list__icontains=query)
+
         ).distinct()
+        
+    
     
     if meal_type:
         recipes = recipes.filter(meal_type=meal_type)
@@ -126,12 +123,11 @@ def recipe_edit(request, slug):
             edited_recipe = form.save()
             
             # Clear existing many-to-many relationships
-            edited_recipe.ingredients.clear()
+            
             edited_recipe.tags.clear()
             
             # Add new relationships
-            for ingredient in form.cleaned_data['ingredients']:
-                edited_recipe.ingredients.add(ingredient)
+            
             for tag in form.cleaned_data['tags']:
                 edited_recipe.tags.add(tag)
             
@@ -140,7 +136,6 @@ def recipe_edit(request, slug):
     else:
         form = forms.createRecipe(instance=recipe)
         # Set initial values for many-to-many fields
-        form.fields['ingredients'].initial = recipe.ingredients.all()
         form.fields['tags'].initial = recipe.tags.all()
     
     return render(request, 'recipes/recipe_edit.html', {'form': form, 'recipe': recipe})

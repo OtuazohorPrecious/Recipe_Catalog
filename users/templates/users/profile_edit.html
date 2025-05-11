@@ -1,10 +1,31 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block content %}
-    <h2>Edit Profile</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-    </form>
+<div class="auth-wrapper">
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2 class="auth-title">Edit Profile</h2>
+            <form method="post" enctype="multipart/form-data" class="auth-form">
+                {% csrf_token %}
+                {% if form.instance.profile_pic %}
+                    <img src="{{ form.instance.profile_pic.url }}" class="profile-pic" alt="Profile Picture">
+                {% endif %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small class="text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary auth-btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

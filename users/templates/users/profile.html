@@ -1,7 +1,8 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <div class="profile-container">
+<div class="auth-wrapper">
+    <div class="auth-container">
         <div class="profile-picture">
             {% if user.profile_picture %}
                 <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="img-thumbnail">
@@ -12,7 +13,11 @@
             <p>Username: {{ user.username }}</p>
             <p>Email: {{ user.email }}</p>
             <p>Account Type: {{ user.get_user_type_display }}</p>
+            <p>Bio: {{ user.bio }}</p>
+            <p>Phone number: {{ user.phone_number }}</p>
             <a href="{% url 'users:profile_edit' %}" class="btn btn-secondary">Edit Profile</a>
         </div>
     </div>
+</div>
+
 {% endblock %}

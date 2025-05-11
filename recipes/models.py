@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
+from .constants import CALORIE_KEYWORDS
 
 
 
@@ -12,11 +13,7 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
     
-class Ingredient(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    
-    def __str__(self):
-        return self.name
+
 
  
 
@@ -32,6 +29,7 @@ class Recipe(models.Model):
 
     title = models.CharField(max_length=200)
     description = models.TextField()
+    ingredients_list = models.TextField()
     slug = models.SlugField()
     instructions = models.TextField()
     meal_type = models.CharField(max_length=50, choices=MEAL_TYPE_CHOICES, null=True)
@@ -40,13 +38,34 @@ class Recipe(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag, related_name='recipes')
-    ingredients = models.ManyToManyField(
-        Ingredient, 
-        through='RecipeIngredient',
-        through_fields=('recipe', 'ingredient'),
-        blank=True
-    )
     is_featured = models.BooleanField(default=False)
+    servings = models.PositiveIntegerField(default=1)
+    estimated_calories = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        help_text="Leave blank for auto-estimate"
+    )
+
+    def estimate_calories(self):
+        """Simple calorie estimation from ingredients text"""
+        total = 0
+        ingredients_lower = self.ingredients_list.lower()
+        for ingredient, calories in CALORIE_KEYWORDS.items():
+            if ingredient.lower() in ingredients_lower:
+                total += calories
+        return total if total > 0 else None
+    
+    @property
+    def estimated_calories_per_serving(self):
+        if self.estimated_calories and self.servings:
+            return self.estimated_calories / self.servings
+        return None
+
+    def save(self, *args, **kwargs):
+        if not self.estimated_calories:  # Auto-fill only if empty
+            self.estimated_calories = self.estimate_calories()
+        super().save(*args, **kwargs)
+
     @property
     def average_rating(self):
         from django.db.models import Avg
@@ -68,18 +87,7 @@ class Recipe(models.Model):
     def __str__(self):
         return self.title
     
-class RecipeIngredient(models.Model):
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, null=True, blank=True)
-    custom_ingredient = models.CharField(max_length=100, blank=True)  # For manual entry
-    quantity = models.CharField(max_length=50, blank = True)
-    
-    def get_ingredient_name(self):
-        return self.ingredient.name if self.ingredient else self.custom_ingredient
-    
-    def __str__(self):
-        return f"{self.quantity} {self.ingredient.name}"
-    
+   
 
 class RecipeRating(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='ratings')

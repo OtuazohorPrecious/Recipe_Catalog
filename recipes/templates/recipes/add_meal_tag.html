@@ -6,24 +6,26 @@
 
 
 {% block content %}
-    <div class="ingredient-form">
-        <h2>Add New Ingredient</h2>
+<div class="recipe-form-container">
+    <div class="recipe-form-card">
+        <h2>Add New Tag</h2>
         <form class= "form-with-validation" method="post">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.GET.next }}">
             
             <div class="form-group">
-                <label for="name">Ingredient Name:</label>
+                <label for="name">Tag Name:</label>
                 <input type="text" id="name" name="name" required 
-                    placeholder="e.g., Saffron">
+                    placeholder="e.g., Vegetarian">
             </div>
             
             <div class="form-actions">
-                <button type="submit" class="btn-primary">Save Ingredient</button>
+                <button type="submit" class="btn-primary">Save Tag</button>
                 <a href="{{ request.GET.next }}" >Cancel</a>
             </div>
         </form>
     </div>
+</div>
     {% comment %} <section>
         <h1>New recipe</h1>
         

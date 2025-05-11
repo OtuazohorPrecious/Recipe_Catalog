@@ -1,60 +1,65 @@
-{% extends 'layout.html' %}  <!-- Assuming you have a base template -->
+{% extends 'layout.html' %}
+{% load static %}
 
 {% block content %}
-<h1>Search Recipes</h1>
+<div class="search-container">
+    <h1 class="text-center mb-4" style="font-family: 'Playfair Display', serif;">Search Recipes</h1>
 
-<!-- Search Form -->
-<form method="get" action="{% url 'recipes:recipe_search' %}" class='form-with-validation'>
-  <!-- Name/Keyword Search -->
-  <div>
-    <label for="q">Search by name or ingredient:</label>
-    <input type="text" name="q" id="q" value="{{ query }}">
-  </div>
+    <form method="get" action="{% url 'recipes:recipe_search' %}" class="search-form">
+        <div class="form-group">
+            <label for="q">Search by name or ingredient:</label>
+            <input type="text" name="q" id="q" value="{{ query }}" class="form-control" placeholder="Enter keywords...">
+        </div>
 
-  <!-- Meal Type Dropdown -->
-  <div class="form-submit">
-    <label for="meal_type">Meal Type:</label>
-    <select name="meal_type" id="meal_type">
-      <option value="">All</option>
-      <option value="breakfast" {% if selected_meal_type == "breakfast" %}selected{% endif %}>Breakfast</option>
-      <option value="lunch" {% if selected_meal_type == "lunch" %}selected{% endif %}>Lunch</option>
-      <option value="dinner" {% if selected_meal_type == "dinner" %}selected{% endif %}>Dinner</option>
-      <option value="desert" {% if selected_meal_type == "desert" %}selected{% endif %}>Desert</option>
-      <option value="snack" {% if selected_meal_type == "snack" %}selected{% endif %}>Snack</option>
-    </select>
-  </div>
+        <div class="form-group">
+            <label for="meal_type">Meal Type:</label>
+            <select name="meal_type" id="meal_type" class="form-control">
+                <option value="">All Meal Types</option>
+                <option value="breakfast" {% if selected_meal_type == "breakfast" %}selected{% endif %}>Breakfast</option>
+                <option value="lunch" {% if selected_meal_type == "lunch" %}selected{% endif %}>Lunch</option>
+                <option value="dinner" {% if selected_meal_type == "dinner" %}selected{% endif %}>Dinner</option>
+                <option value="desert" {% if selected_meal_type == "desert" %}selected{% endif %}>Dessert</option>
+                <option value="snack" {% if selected_meal_type == "snack" %}selected{% endif %}>Snack</option>
+            </select>
+        </div>
 
-  <!-- Tag Checkboxes -->
-  <div class>
-    <label>Tags:</label>
-    {% for tag in all_tags %}
-      <div>
-        <input 
-          type="checkbox" 
-          name="tags" 
-          id="tag-{{ tag.id }}" 
-          value="{{ tag.id }}"
-          {% if tag.id in selected_tags %}checked{% endif %}
-        >
-        <label for="tag-{{ tag.id }}">{{ tag.name }}</label>
-      </div>
-    {% endfor %}
-  </div>
+        <div class="form-group">
+            <label>Tags:</label>
+            <div class="tag-checkboxes">
+                {% for tag in all_tags %}
+                <label class="tag-checkbox">
+                    <input type="checkbox" name="tags" id="tag-{{ tag.id }}" value="{{ tag.id }}"
+                        {% if tag.id in selected_tags %}checked{% endif %}>
+                    {{ tag.name }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
 
-  <button type="submit" class="form-submit">Search</button>
-</form>
+        <button type="submit" class="btn btn-primary w-100">Search Recipes</button>
+    </form>
 
-<!-- Results -->
-<h3>Results ({{ recipes.count }})</h3>
-<ul>
-  {% for recipe in recipes %}
-    <li>
-      <h3><a href="{% url 'recipes:page' slug=recipe.slug %}">{{ recipe.title }}</a></h3>
-      <p>Meal Type: {{ recipe.meal_type }}</p>
-      <p>Tags: {% for tag in recipe.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-    </li>
-  {% empty %}
-    <p>No recipes found.</p>
-  {% endfor %}
-</ul>
+    {% if recipes %}
+    <div class="search-results">
+        <h3 class="mb-4">Results ({{ recipes.count }})</h3>
+        <div class="row">
+            {% for recipe in recipes %}
+            <div class="col-md-6 mb-4">
+                <div class="recipe-card">
+                    <h4><a href="{% url 'recipes:page' slug=recipe.slug %}">{{ recipe.title }}</a></h4>
+                    <p class="text-muted mb-1">Meal Type: {{ recipe.get_meal_type_display }}</p>
+                    <p class="mb-0">
+                        Tags: {% for tag in recipe.tags.all %}
+                        <span class="badge bg-light text-dark">{{ tag.name }}</span>
+                        {% endfor %}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% elif query %}
+    <div class="alert alert-info">No recipes found matching your criteria.</div>
+    {% endif %}
+</div>
 {% endblock %}

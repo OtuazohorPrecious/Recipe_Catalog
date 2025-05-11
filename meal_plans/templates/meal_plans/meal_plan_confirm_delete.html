@@ -1,13 +1,22 @@
 {% extends 'layout.html' %}
+{% load static %}
 
-{% block title %}Delete {{ meal_plan.title }}{% endblock %}
+{% block title %}Delete Meal Plan{% endblock %}
 
 {% block content %}
-    <h1>Delete Meal Plan</h1>
-    <p>Are you sure you want to delete this Meal plan?</p>
+<div class="confirmation-dialog">
+    <h2 style="font-family: 'Playfair Display', serif;">Confirm Deletion</h2>
+    <div class="alert alert-danger mt-3">
+        <p class="mb-0">Are you sure you want to delete this meal plan?</p>
+        <p class="mb-0 fw-bold">{{ meal_plan.start_date|date:"M j" }} to {{ meal_plan.end_date|date:"M j, Y" }}</p>
+    </div>
+    
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Yes, delete</button>
-        <a href="{% url 'meal_plans:view_meal_plan' meal_plan_id=meal_plan.id %}" class="btn btn-secondary">Cancel</a>
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <a href="{% url 'meal_plans:view_meal_plan' meal_plan_id=meal_plan.id %}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        </div>
     </form>
+</div>
 {% endblock %}
