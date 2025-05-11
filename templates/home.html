@@ -60,6 +60,9 @@
             </div>
             <div class="card-footer bg-transparent">
             <a href="{% url 'recipes:page' recipe.slug %}" class="btn btn-sm btn-outline-primary">View Recipe</a>
+            <a href="{% url 'users:chef_profile' recipe.created_by.username %}" class="btn btn-outline-dark">
+                <i class="bi bi-person"></i> Chef Profile
+            </a>
             <small class="text-muted float-end">
                 By <a href="{% url 'users:chef_profile' recipe.created_by.username %}">{{ recipe.created_by.username }}</a>
             </small>

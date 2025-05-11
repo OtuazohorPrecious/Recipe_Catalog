@@ -1,23 +1,65 @@
-
-{% extends 'layout.html'%}
-
-{% block title %}
-    User Login
-{% endblock %}
-
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}User Login{% endblock %}
 
 {% block content %}
-    <h1>User Login</h1>
-    <form class = "form-with-activation" action="" method = "post">
-        {% csrf_token %}
-        {{ form }}
-        {% if request.GET.next %}
-            <input type="hidden" name="next" value="{{ request.GET.next }}" />
-        {% endif %}
-        <button class = "form-submit" >Submit</button>
-        <p class="mt-3">
-            <a href="{% url 'users:password_reset' %}">Forgot your password?</a>
-        </p>
-    </form>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <!-- Login Card -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-sm-5">
+                    <h1 class="h3 text-center mb-4" style="font-family: 'Playfair Display', serif;">
+                        Welcome Back
+                    </h1>
+                    <!-- Error Messages -->
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    
+                    <form class="form-with-activation" action="" method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Form Fields -->
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                            {{ form.username }}
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+                            {{ form.password }}
+                        </div>
+                        
+                        {% if request.GET.next %}
+                            <input type="hidden" name="next" value="{{ request.GET.next }}" />
+                        {% endif %}
+                        
+                        <button class="btn btn-primary w-100 py-2 mb-3" type="submit">
+                            Sign In
+                        </button>
+                        
+                        <div class="text-center">
+                            <a href="{% url 'users:password_reset' %}" class="text-decoration-none">
+                                Forgot your password?
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Optional: Registration Link -->
+            <div class="text-center mt-4">
+                <p class="text-muted">Don't have an account? 
+                    <a href="{% url 'users:register' %}" class="text-decoration-none">Sign up</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
-

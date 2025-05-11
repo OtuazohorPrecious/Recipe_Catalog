@@ -18,6 +18,12 @@ class MealPlan(models.Model):
 class Day(models.Model):
     meal_plan = models.ForeignKey(MealPlan, on_delete=models.CASCADE, related_name='days')
     date = models.DateField()
+    def get_total_calories(self):
+        total = 0
+        for meal in self.meals.all():
+            if meal.recipe and meal.recipe.estimated_calories:
+                total += meal.recipe.estimated_calories
+        return total if total > 0 else None
 
 class Meal(models.Model):
     MEAL_TYPES = [

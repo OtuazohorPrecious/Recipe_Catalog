@@ -1,34 +1,41 @@
-{% extends 'layout.html'%}
+{% extends 'layout.html' %}
+{% load static %}
 
-{% block title %}
-    New Recipe
-{% endblock %}
-
+{% block title %}New Recipe{% endblock %}
 
 {% block content %}
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-lg-6">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h2 class="h4 mb-0">Create New Recipe</h2>
-                    </div>
-                    <form class= "form-with-validation" action="" method="post" enctype= "multipart/form-data">
-                        {% csrf_token %}
-                        {{ form }}
-                        
-                        <div class="add-more-link">
-                            <a href="{% url 'recipes:add-ingredient' %}?next={% url 'recipes:new-recipe' %}" 
-                               class="add-button">
-                               + Add Missing Ingredient
-                            </a>
-                            <span class="help-text">(Will return you here after adding)</span>
-                        </div>
-                        <button class="form-submit">Add Recipe</button>
-                    </form>
-                </div>
+<div class="recipe-form-container">
+    <div class="recipe-form-card">
+        <h2 class="text-center mb-4" style="font-family: 'Playfair Display', serif;">Create New Recipe</h2>
+        
+        <form class="form-with-validation" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="mb-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                <small class="text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
             </div>
-        </div>
+            {% endfor %}
+            
+            <div class="mb-4 text-center">
+                <a href="{% url 'recipes:add_meal_tag' %}?next={% url 'recipes:new-recipe' %}" 
+                   class="btn btn-outline-secondary">
+                   <i class="bi bi-plus-circle"></i> Add Meal Tag
+                </a>
+                <small class="d-block text-muted mt-1">(Will return you here after adding)</small>
+            </div>
+            
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Create Recipe</button>
+            </div>
+        </form>
     </div>
-    
+</div>
 {% endblock %}

@@ -309,27 +309,300 @@ body {
 
 
 
-    /* Consistent styling with recipe page */
-    .day-card {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        border-radius: 12px;
+/* Consistent styling with recipe page */
+.day-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 12px;
+}
+
+.day-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.meal-item {
+    transition: background-color 0.2s ease;
+}
+
+.meal-item:hover {
+    background-color: #f8f9fa;
+}
+
+@media (max-width: 768px) {
+    .col-lg-4 {
+        margin-bottom: 1.5rem;
     }
-    
-    .day-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+ /* Form styling */
+.form-with-activation input[type="text"],
+.form-with-activation input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    transition: border-color 0.15s ease-in-out;
+}
+
+.form-with-activation input:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Card styling */
+.card {
+    border-radius: 12px;
+}
+
+@media (max-width: 576px) {
+    .card-body {
+        padding: 1.5rem;
     }
-    
-    .meal-item {
-        transition: background-color 0.2s ease;
-    }
-    
-    .meal-item:hover {
-        background-color: #f8f9fa;
-    }
-    
-    @media (max-width: 768px) {
-        .col-lg-4 {
-            margin-bottom: 1.5rem;
-        }
-    }
+}
+
+/* Auth Container */
+.auth-wrapper {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Card styling  */
+.auth-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem;
+    background: white;
+}
+
+
+.auth-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.auth-form input:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 1rem;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.auth-links a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+/* Profile Edit Styling */
+.profile-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+}
+
+/* Password Reset Specific */
+.invalid-link-alert {
+    color: #dc3545;
+    background-color: #f8d7da;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.success-message {
+    color: #198754;
+    background-color: #d1e7dd;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+
+/* Search Page */
+.search-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.search-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.search-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.search-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.search-form input[type="text"],
+.search-form select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.search-results {
+    margin-top: 2rem;
+}
+
+.search-results .recipe-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.search-results .recipe-card:hover {
+    transform: translateY(-3px);
+}
+
+/* Recipe Form Styles */
+.recipe-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.recipe-form-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 2rem;
+}
+
+/* Confirmation Dialogs */
+.confirmation-dialog {
+    max-width: 500px;
+    margin: 0 auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* Meal Plan Forms */
+.meal-plan-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.meal-plan-form table {
+    width: 100%;
+}
+
+.meal-plan-form th {
+    background: #f8f9fa;
+    padding: 1rem;
+}
+
+.meal-plan-form td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+/* Tag Checkboxes */
+.tag-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.tag-checkbox {
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.tag-checkbox input {
+    margin-right: 0.5rem;
+}
+
+
+.daily-calories-summary {
+    font-size: 0.9rem;
+    border-left: 3px solid #dc3545;
+    border-right: 3px solid #dc3545;
+}
+
+.meal-item .text-muted {
+    font-size: 0.8rem;
+}
+
+/* Calculator header styles */
+.card-header button {
+    width: 100%;
+    text-align: left;
+    color: #212529;
+    padding: 0.5rem 1rem;
+}
+.card-header button:hover {
+    color: #0d6efd;
+}
+.card-header .bi {
+    transition: transform 0.2s ease;
+}
+/* Make the collapse transition smoother */
+.collapse {
+    transition: all 0.3s ease;
+}
+.card-header button {
+    text-decoration: none;
+    color: inherit;
+}
+.card-header button:hover {
+    color: #0d6efd;
+}

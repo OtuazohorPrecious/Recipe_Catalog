@@ -1,17 +1,33 @@
+{% extends 'layout.html' %}
+{% load static %}
 
-{% extends 'layout.html'%}
-
-{% block title %}
-    Register a New user
-{% endblock %}
-
+{% block title %}Register a New User{% endblock %}
 
 {% block content %}
-    <h1>Register a New User</h1>
-    <form class = "form-with-activation" action="" method = "post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
+<div class="auth-wrapper">
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">Create Account</h1>
+            <form class="auth-form" action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small class="text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary auth-btn">Register</button>
+            </form>
+            <div class="auth-links">
+                <a href="{% url 'users:login' %}">Already have an account? Login</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
-
