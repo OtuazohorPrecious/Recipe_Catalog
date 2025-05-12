@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 load_dotenv() 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -40,9 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'recipes',
-    'meal_plans',
-    'users',
+    'recipes.apps.RecipesConfig',
+    'users.apps.UsersConfig',
+    'meal_plans.apps.MealPlansConfig',
+    # 'recipes',
+    # 'meal_plans',
+    # 'users',
 ]
 
 MIDDLEWARE = [
