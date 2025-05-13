@@ -29,6 +29,7 @@ STORAGES = {
     }
 }
 
+DEFAULT_FILE_STORAGE = 'recipe_catalog.storage.SupabaseStorage'
 SUPABASE_URL = os.getenv("SUPABASE_URL")  # Set these in Render env vars
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 SUPABASE_BUCKET = "media"
