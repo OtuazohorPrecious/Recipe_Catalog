@@ -20,14 +20,14 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 
 # Supabase Storage configuration (production-only)
-STORAGES = {
-    "default": {  # Media files (uploads)
-        "BACKEND": "django_storage_supabase.supabase.SupabaseStorage"
-    },
-    "staticfiles": {  # Static files (CSS, JS)
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
-    }
-}
+# STORAGES = {
+#     "default": {  # Media files (uploads)
+#         "BACKEND": "django_storage_supabase.supabase.SupabaseStorage"
+#     },
+#     "staticfiles": {  # Static files (CSS, JS)
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+#     }
+# }
 
 DEFAULT_FILE_STORAGE = 'recipe_catalog.storage.SupabaseStorage'
 SUPABASE_URL = os.getenv("SUPABASE_URL")  # Set these in Render env vars
