@@ -18,6 +18,20 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 #     }
 # }
 
+
+# Supabase Storage configuration (production-only)
+STORAGES = {
+    "default": {  # Media files (uploads)
+        "BACKEND": "django_storage_supabase.supabase.SupabaseStorage"
+    },
+    "staticfiles": {  # Static files (CSS, JS)
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    }
+}
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")  # Set these in Render env vars
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+SUPABASE_BUCKET = "media"
 # Database Configuration
 DATABASES = {
     'default': dj_database_url.config(

@@ -33,7 +33,7 @@ class Recipe(models.Model):
     slug = models.SlugField()
     instructions = models.TextField()
     meal_type = models.CharField(max_length=50, choices=MEAL_TYPE_CHOICES, null=True)
-    banner = models.ImageField(default= 'fallback.png', blank = True)
+    banner = models.ImageField(default= 'fallback.png', blank = True, upload_to='recipes/')
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
