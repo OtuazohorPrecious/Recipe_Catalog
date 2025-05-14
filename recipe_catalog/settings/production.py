@@ -29,7 +29,14 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 #     }
 # }
 
-DEFAULT_FILE_STORAGE = 'recipe_catalog.storage.SupabaseStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "recipe_catalog.storage.SupabaseStorage"  # Your custom backend path
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    }
+}
 SUPABASE_URL = os.getenv("SUPABASE_URL")  # Set these in Render env vars
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 SUPABASE_BUCKET = "media"
