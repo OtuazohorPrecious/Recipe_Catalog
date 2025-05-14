@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'recipes.apps.RecipesConfig',
     'users.apps.UsersConfig',
     'meal_plans.apps.MealPlansConfig',
-    'django_storage_supabase',
     # 'recipes',
     # 'meal_plans',
     # 'users',
