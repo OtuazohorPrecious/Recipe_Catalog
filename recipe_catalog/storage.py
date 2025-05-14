@@ -24,9 +24,13 @@ class SupabaseStorage(Storage):
             raise Exception(f"Failed to upload {name} to Supabase Storage.")
         return name
 
-    # def exists(self, name):
-    #     response = self.storage_client.list(path=name)
-    #     return len(response.data) > 0 if response.status_code == 200 else False
+    def exists(self, name):
+        response = self.storage_client.list(path=name)
+        # Check if response contains 'error' key
+        if response.get('error'):
+            return False
+        # response['data'] is a list of files/folders; check if the file exists
+        return any(obj['name'] == name.split('/')[-1] for obj in response.get('data', []))
 
     def url(self, name):
         # Public URL format for Supabase Storage
