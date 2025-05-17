@@ -25,12 +25,13 @@ class SupabaseStorage(Storage):
         return name
 
     def exists(self, name):
-        response = self.storage_client.list(path=name)
-        # Check if response contains 'error' key
-        if response.get('error'):
-            return False
-        # response['data'] is a list of files/folders; check if the file exists
-        return any(obj['name'] == name.split('/')[-1] for obj in response.get('data', []))
+        # Extract folder path from name
+        folder = '/'.join(name.split('/')[:-1]) or ''
+        # List files in the folder
+        files = self.storage_client.list(path=folder)
+        # files is a list of dicts with 'name' keys
+        filename = name.split('/')[-1]
+        return any(file['name'] == filename for file in files)
 
     def url(self, name):
         # Public URL format for Supabase Storage
