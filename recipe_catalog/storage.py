@@ -71,9 +71,10 @@ class SupabaseStorage(Storage):
             file_options={'content-type': content_type, 'upsert': 'true'}
         )
         
-        if response.get('error'):
-            raise Exception(f"Upload failed: {response['error']['message']}")
+        if response.error:
+            raise Exception(f"Failed to upload {name}: {response.error.message}")
         return name
+
 
     def exists(self, name):
         folder = '/'.join(name.split('/')[:-1]) or ''
