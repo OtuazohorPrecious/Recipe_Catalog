@@ -80,7 +80,21 @@ class SupabaseStorage(Storage):
             raise Exception(f"Failed to upload {name}: no data returned")
         
         return name
-
+# New update method to replace existing files
+    def update(self, name, content):
+        content.seek(0)
+        data = content.read()
+        content_type = getattr(content, 'content_type', 'application/octet-stream')
+        response = self.storage_client.update(
+            path=name,
+            file=data,
+            file_options={'content-type': content_type, 'upsert': False}  # upsert False means replace only
+        )
+        if hasattr(response, 'status_code') and response.status_code != 200:
+            raise Exception(f"Failed to update {name}: HTTP {response.status_code}")
+        if not getattr(response, 'data', None):
+            raise Exception(f"Failed to update {name}: no data returned")
+        return name
 
 
     def exists(self, name):
