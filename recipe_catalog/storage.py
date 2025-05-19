@@ -19,10 +19,19 @@ class SupabaseStorage(Storage):
     def _save(self, name, content):
         content.seek(0)
         data = content.read()
-        response = self.storage_client.upload(name, data, {'content-type': content.content_type})
-        if response.status_code != 200:
-            raise Exception(f"Failed to upload {name} to Supabase Storage.")
+        # Get content type safely (may not exist on all `content` objects)
+        content_type = getattr(content, 'content_type', 'application/octet-stream')
+        # Upload with content type and upsert option
+        response = self.storage_client.upload(
+            name, 
+            data, 
+            {'content-type': content_type, 'upsert': True}
+        )
+        # Check for error key in response
+        if response.get('error'):
+            raise Exception(f"Failed to upload {name}: {response['error']['message']}")
         return name
+
 
     def exists(self, name):
         # Extract folder path from name
