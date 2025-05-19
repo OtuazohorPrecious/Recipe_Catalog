@@ -71,15 +71,15 @@ class SupabaseStorage(Storage):
             file_options={'content-type': content_type, 'upsert': 'true'}
         )
         
-        # Check status_code if available
+        print("Supabase upload response:", response)
+        
         if hasattr(response, 'status_code') and response.status_code != 200:
             raise Exception(f"Failed to upload {name}: HTTP {response.status_code}")
-        
-        # Optionally check if data is present
         if not getattr(response, 'data', None):
             raise Exception(f"Failed to upload {name}: no data returned")
         
         return name
+
 # New update method to replace existing files
     def update(self, name, content):
         content.seek(0)
