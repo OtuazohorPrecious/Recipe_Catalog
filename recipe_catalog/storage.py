@@ -85,8 +85,8 @@ class SupabaseStorage(Storage):
         if hasattr(response, 'status_code') and response.status_code != 200:
             raise Exception(f"Failed to upload {name}: HTTP {response.status_code}")
 
-        if not getattr(response, 'data', None):
-            raise Exception(f"Failed to upload {name}: no data returned")
+        # if not getattr(response, 'data', None):
+        #     raise Exception(f"Failed to upload {name}: no data returned")
 
         return name
 # New update method to replace existing files
