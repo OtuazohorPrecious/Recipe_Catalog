@@ -72,8 +72,11 @@ class SupabaseStorage(Storage):
             file_options={'content-type': content_type, 'upsert': 'true'}
         )
         
-        if response.status_code != 200:
-            raise Exception(f"Failed to upload {name}: HTTP {response.status_code}")
+        # Check for error key in response dict
+        if response.get('error'):
+            error_msg = response['error']['message']
+            raise Exception(f"Failed to upload {name}: {error_msg}")
+        
         return name
 # New update method to replace existing files
     def update(self, name, content):
