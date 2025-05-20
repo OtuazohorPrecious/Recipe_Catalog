@@ -65,17 +65,29 @@ class SupabaseStorage(Storage):
         data = content.read()
         content_type = getattr(content, 'content_type', 'application/octet-stream')
         
-        # Use 'true' (string) instead of True (boolean)
-        response = self.storage_client.upload(
-            path=name,
-            file=data,
-            file_options={'content-type': content_type, 'upsert': 'true'}
-        )
+        # # Use 'true' (string) instead of True (boolean)
+        # response = self.storage_client.upload(
+        #     path=name,
+        #     file=data,
+        #     file_options={'content-type': content_type, 'upsert': 'true'}
+        # )
         
         # Check for error attribute
-        if response.error:
-            raise Exception(f"Failed to upload {name}: {response.error.message}")
-        
+        try:
+            response = self.storage_client.upload(
+                path=name,
+                file=data,
+                file_options={'content-type': content_type, 'upsert': 'true'}
+            )
+        except Exception as e:
+            raise Exception(f"Upload failed: {str(e)}")
+
+        if hasattr(response, 'status_code') and response.status_code != 200:
+            raise Exception(f"Failed to upload {name}: HTTP {response.status_code}")
+
+        if not getattr(response, 'data', None):
+            raise Exception(f"Failed to upload {name}: no data returned")
+
         return name
 # New update method to replace existing files
     def update(self, name, content):
