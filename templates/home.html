@@ -9,83 +9,72 @@
 <!-- Main Content -->
 <main>
     {% block content %}
-        <!-- Hero Carousel Section - Now showing 6 recipes (2 per slide) -->
-        <section class="recipe-carousel mb-5">
-            <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner rounded-5">
-                    {% for recipe in featured_recipes %}
-                        {% if forloop.counter0|divisibleby:2 %}
-                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                <div class="row g-4">
-                        {% endif %}
-                        
-                        <div class="col-md-6">
-                            <div class="carousel-card h-100">
-                                <div class="carousel-image" style="background-image: url('{{ recipe.banner.url }}');"></div>
-                                <div class="carousel-caption">
-                                    <div class="caption-content bg-dark bg-opacity-75 p-3 rounded">
-                                        <h3>{{ recipe.title }}</h3>
-                                        <p>{{ recipe.description|truncatewords:15 }}</p>
-                                        <div class="d-flex gap-2">
-                                            <a href="{% url 'recipes:page' recipe.slug %}" class="btn btn-primary btn-sm">
-                                                View Recipe
-                                            </a>
-                                            <a href="{% url 'users:chef_profile' recipe.created_by.username %}" class="btn btn-outline-light btn-sm">
-                                                <i class="bi bi-person"></i> Chef
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-    
-                        {% if forloop.counter|divisibleby:2 or forloop.last %}
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+    <!-- Hero Carousel Section -->
+    <section class="recipe-carousel mb-5">
+    <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner rounded-5">
+        {% for recipe in featured_recipes %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <div class="carousel-image" style="background-image: url('{{ recipe.banner.url }}');"></div>
+            
+            
+            <div class="carousel-caption d-none d-md-block">
+            <div class="caption-content bg-dark bg-opacity-75 p-4 rounded">
+                <h2>{{ recipe.title }}</h2>
+                <p>{{ recipe.description|truncatewords:20 }}</p>
+                <div class="d-flex gap-2">
+                <a href="{% url 'recipes:page' recipe.slug %}" class="btn btn-primary">
+                    View Recipe
+                </a>
+                <a href="{% url 'users:chef_profile' recipe.created_by.username %}" class="btn btn-outline-light">
+                    <i class="bi bi-person"></i> Chef Profile
+                </a>
                 </div>
-                <!-- Carousel Controls -->
-                <button class="carousel-control-prev" type="button" data-bs-target="#recipeCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#recipeCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
             </div>
-        </section>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#recipeCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#recipeCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    </section>
 
-        <!-- Featured Recipes Grid - 3 columns -->
-        <section class="featured-recipes mb-5">
-            <h2 class="text-center mb-4">Discover More Recipes</h2>
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                {% for recipe in other_recipes %}
-                    <div class="col">
-                        <div class="card h-100 recipe-card">
-                            <img src="{{ recipe.banner.url }}" class="card-img-top" alt="{{ recipe.title }}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ recipe.title }}</h5>
-                                <p class="card-text">{{ recipe.description|truncatewords:15 }}</p>
-                            </div>
-                            <div class="card-footer bg-transparent">
-                                <a href="{% url 'recipes:page' recipe.slug %}" class="btn btn-sm btn-outline-primary">View Recipe</a>
-                                <small class="text-muted float-end">
-                                    By <a href="{% url 'users:chef_profile' recipe.created_by.username %}">{{ recipe.created_by.username }}</a>
-                                </small>
-                            </div>
+    <!-- Featured Recipes Grid - 3 columns -->
+    <section class="featured-recipes mb-5">
+        <h2 class="text-center mb-4">Discover More Recipes</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for recipe in other_recipes %}
+                <div class="col">
+                    <div class="card h-100 recipe-card">
+                        <img src="{{ recipe.banner.url }}" class="card-img-top" alt="{{ recipe.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ recipe.title }}</h5>
+                            <p class="card-text">{{ recipe.description|truncatewords:15 }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="{% url 'recipes:page' recipe.slug %}" class="btn btn-sm btn-outline-primary">View Recipe</a>
+                            <small class="text-muted float-end">
+                                By <a href="{% url 'users:chef_profile' recipe.created_by.username %}">{{ recipe.created_by.username }}</a>
+                            </small>
                         </div>
                     </div>
-                {% empty %}
-                    <div class="col-12 text-center">
-                        <p class="text-muted">No additional recipes found.</p>
-                    </div>
-                {% endfor %}
-            </div>
-        </section>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">No additional recipes found.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
 
-        <h6 class="text-center mt-4">Click <a href="/about">here</a> to learn more about us</h6>
+    <h6 class="text-center mt-4">Click <a href="/about">here</a> to learn more about us</h6>
     </main>
     {% endblock %}
 </main>
