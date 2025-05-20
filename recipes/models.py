@@ -30,7 +30,7 @@ class Recipe(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     ingredients_list = models.TextField()
-    slug = models.SlugField()
+    slug = models.SlugField(help_text="A unique identifier for the recipe like a nickname")
     instructions = models.TextField()
     meal_type = models.CharField(max_length=50, choices=MEAL_TYPE_CHOICES, null=True)
     banner = models.ImageField(default= 'fallback.png', blank = True, upload_to='recipes/')
