@@ -61,24 +61,18 @@ class SupabaseStorage(Storage):
             raise FileNotFoundError(f"File {name} not found in Supabase Storage.")
 
     def _save(self, name, content):
-        content.seek(0)
-        data = content.read()
-        content_type = getattr(content, 'content_type', 'application/octet-stream')
-        
-        response = self.storage_client.upload(
-            path=name,
-            file=data,
-            file_options={'content-type': content_type, 'upsert': 'true'}
-        )
-        
-        print("Supabase upload response:", response)
-        
-        if hasattr(response, 'status_code') and response.status_code != 200:
-            raise Exception(f"Failed to upload {name}: HTTP {response.status_code}")
-        if not getattr(response, 'data', None):
-            raise Exception(f"Failed to upload {name}: no data returned")
-        
-        return name
+            content.seek(0)
+            data = content.read()
+            content_type = getattr(content, 'content_type', 'application/octet-stream')
+            response = self.storage_client.upload(
+                path=name,
+                file=data,
+                file_options={'content-type': content_type, 'upsert': True}
+            )
+            # Basic success check
+            if response.status_code != 200:
+                raise Exception(f"Failed to upload {name} to Supabase Storage.")
+            return name
 
 # New update method to replace existing files
     def update(self, name, content):
