@@ -12,7 +12,7 @@
     <!-- Hero Carousel Section -->
     <section class="recipe-carousel mb-5">
     <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner rounded-3">
+        <div class="carousel-inner rounded-5">
         {% for recipe in featured_recipes %}
         <div class="carousel-item {% if forloop.first %}active{% endif %}">
             <div class="carousel-image" style="background-image: url('{{ recipe.banner.url }}');"></div>
